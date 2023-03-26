@@ -2,9 +2,9 @@
 
 To execute this project, please run the `loop_over_dataset.py` script within a Python environment that has all the necessary packages installed.
 
-## Project step 1: Compute Lidar Point-Cloud from Range Image
+## 1 Project step 1: Compute Lidar Point-Cloud from Range Image
 
-### Visualize range image channels
+### 1.1 Visualize range image channels
 
 My implementation of the function `show_range_image` in file `objdet_pcl.py`
 
@@ -64,7 +64,95 @@ And the output-image looks like the following:
 
 <img src="Pics/Pic_1.png" width=100%>
 
-### Visualize lidar point-cloud 
+### 1.2 Visualize lidar point-cloud 
+
+My implementation of the function `show_pcl` in file `objdet_pcl.py`
+
+```python
+# visualize lidar point-cloud
+def show_pcl(pcl):
+
+    ####### ID_S1_EX2 START #######     
+    #######
+    print("student task ID_S1_EX2")
+
+    # step 1 : initialize open3d with key callback and create window
+    vis_lpc     = o3d.visualization.VisualizerWithKeyCallback()
+    vis_lpc.create_window(window_name='Open3D', width=1280, height=1080, left=50, top=50, visible=True)
+    global idx
+    idx= True
+    def right_click(vis_lpc):
+        global idx
+        print('right arrow pressed')
+        idx     = False
+        return
+    vis_lpc.register_key_callback(262,right_click)
+
+    # step 2 : create instance of open3d point-cloud class
+    pcd         = o3d.geometry.PointCloud()
+
+    # step 3 : set points in pcd instance by converting the point-cloud into 3d vectors (using open3d function Vector3dVector)
+    pcd.points  = o3d.utility.Vector3dVector(pcl[:,:3])
+
+    # step 4 : for the first frame, add the pcd instance to visualization using add_geometry; for all other frames, use update_geometry instead
+    vis_lpc.add_geometry(pcd)
+
+    # step 5 : visualize point cloud and keep window open until right-arrow is pressed (key-code 262)
+    while idx:
+        vis_lpc.poll_events()
+        vis_lpc.update_renderer()
+
+    #######
+    ####### ID_S1_EX2 END ####### 
+```
+
+In order to be able to use this function this module was included
+
+```python
+import open3d as o3d
+```
+
+And the output-image of the lidar point-cloud looks like the following:
+
+<table>
+  <tr>
+    <td>
+      <img src="Pics/Pic_2.png" alt="pcl 1">
+    </td>
+    <td>
+      <img src="Pics/Pic_3.png" alt="pcl 2">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="Pics/Pic_4.png" alt="pcl 3">
+    </td>
+    <td>
+      <img src="Pics/Pic_5.png" alt="pcl 4">
+    </td>
+  </tr>
+</table>
+
+## 2 Project step 2: Create Birds-Eye View from Lidar PCL
+
+### 2.1 Convert sensor coordinates to BEV-map coordinates
+
+### 2.2 Compute intensity layer of the BEV map
+
+### 2.3 Compute height layer of the BEV map
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### 1. Write a short recap of the four tracking steps and what you implemented there (filter, track management, association, camera fusion). Which results did you achieve? Which part of the project was most difficult for you to complete, and why?
