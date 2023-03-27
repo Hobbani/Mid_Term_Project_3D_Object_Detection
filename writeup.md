@@ -137,6 +137,35 @@ And the output-image of the lidar point-cloud looks like the following:
 
 ### 2.1 Convert sensor coordinates to BEV-map coordinates
 
+My implementation of first part of the function `bev_from_pcl` in file `objdet_pcl.py`
+
+```python
+    # convert sensor coordinates to bev-map coordinates (center is bottom-middle)
+    ####### ID_S2_EX1 START #######     
+    #######
+    print("student task ID_S2_EX1")
+
+    ## step 1 :  compute bev-map discretization by dividing x-range by the bev-image height (see configs)
+    bev_discret         = (configs.lim_x[1] - configs.lim_x[0]) / configs.bev_height
+
+    ## step 2 : create a copy of the lidar pcl and transform all metrix x-coordinates into bev-image coordinates    
+    lidar_pcl_cpy       = np.copy(lidar_pcl)
+    lidar_pcl_cpy[:, 0] = np.int_(np.floor(lidar_pcl_cpy[:, 0] / bev_discret))
+
+    # step 3 : perform the same operation as in step 2 for the y-coordinates but make sure that no negative bev-coordinates occur
+    lidar_pcl_cpy[:, 1] = np.int_(np.floor(lidar_pcl_cpy[:, 1] / bev_discret) + (configs.bev_width + 1) / 2)
+    lidar_pcl_cpy[:, 1] = np.abs(lidar_pcl_cpy[:,1])
+
+    # step 4 : visualize point-cloud using the function show_pcl from a previous task
+    show_pcl(lidar_pcl_cpy)
+
+    #######
+    ####### ID_S2_EX1 END ####### 
+```
+And the output-image of the BEV looks like the following:
+
+<img src="Pics/Pic_6.png" width=100%>
+
 ### 2.2 Compute intensity layer of the BEV map
 
 ### 2.3 Compute height layer of the BEV map
